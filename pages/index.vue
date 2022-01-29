@@ -11,6 +11,9 @@
 <script>
 export default {
   name: "IndexPage",
+  head: {
+    title: "Home",
+  },
   methods: {
     async getUser() {
       debugger;

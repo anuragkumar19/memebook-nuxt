@@ -75,6 +75,9 @@
 <script>
 export default {
   name: "SignUpPage",
+  head: {
+    title: "SignUp",
+  },
   auth: "guest",
   data() {
     return {

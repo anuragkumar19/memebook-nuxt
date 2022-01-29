@@ -50,6 +50,9 @@
 <script>
 export default {
   name: "ResetPasswordPage",
+  head: {
+    title: "Reset Password",
+  },
   auth: false,
   data() {
     return {

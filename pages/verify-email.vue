@@ -34,6 +34,9 @@
 <script>
 export default {
   name: "VerifyEmailPage",
+  head: {
+    title: "Verify Email",
+  },
   auth: "guest",
   data() {
     return {

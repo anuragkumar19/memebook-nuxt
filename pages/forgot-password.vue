@@ -43,6 +43,9 @@
 <script>
 export default {
   name: "ForogtPasswordPage",
+  head: {
+    title: "Forgot Password",
+  },
   auth: false,
   data() {
     return {

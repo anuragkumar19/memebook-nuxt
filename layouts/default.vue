@@ -1,6 +1,8 @@
 <template>
   <v-app>
-    <Nuxt />
+    <NavBar v-if="$auth.loggedIn" />
+    <Nuxt keep-alive />
+    <Footer />
   </v-app>
 </template>
 

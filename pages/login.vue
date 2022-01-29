@@ -63,6 +63,9 @@
 <script>
 export default {
   name: "LoginPage",
+  head: {
+    title: "Login",
+  },
   auth: "guest",
   data() {
     return {
