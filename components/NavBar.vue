@@ -31,8 +31,11 @@
           <v-list-item>
             <v-list-item-title>{{ $auth.user.username }}</v-list-item-title>
           </v-list-item>
-          <v-list-item nuxt to="/profile">
+          <v-list-item nuxt :to="`/user/${$auth.user.username}`">
             <v-list-item-title>Profile</v-list-item-title>
+          </v-list-item>
+          <v-list-item nuxt to="/accounts/saved">
+            <v-list-item-title>Saved</v-list-item-title>
           </v-list-item>
           <v-list-item nuxt @click="() => $auth.logout()">
             <v-list-item-title>Logout</v-list-item-title>

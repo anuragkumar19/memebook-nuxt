@@ -1,12 +1,10 @@
 <template>
   <v-container>
+    <h1>Saved Posts</h1>
     <div class="text-center" v-if="$fetchState.pending">
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </div>
     <Posts :posts="posts" />
-    <p v-if="!$fetchState.pending && posts.length == 0">
-      Start following people to see posts
-    </p>
     <div class="text-center">
       <v-btn
         text
@@ -21,21 +19,33 @@
     </div>
   </v-container>
 </template>
-
 <script>
 export default {
-  name: "IndexPage",
+  name: "SavedPostPage",
   head: {
-    title: "Home",
+    title: `Saved Posts`,
   },
   data() {
     return {
       posts: [],
-      limit: 10,
+      limit: 5,
       page: 1,
       enough: false,
       loading: false,
     };
+  },
+  async fetch() {
+    try {
+      this.posts = (
+        await this.$axios.$get(
+          `/user/saved?limit=${this.limit}&page=${this.page}`
+        )
+      ).savedPosts;
+      this.enough = this.posts.length < this.limit;
+    } catch (err) {
+      console.log(err);
+      this.$toast.error(err.response.data.message);
+    }
   },
   methods: {
     async getData() {
@@ -45,10 +55,10 @@ export default {
 
       try {
         const res = await this.$axios.$get(
-          `/post/feed?page=${this.page}&limit=${this.limit}`
+          `/user/saved?limit=${this.limit}&page=${this.page}`
         );
 
-        this.posts = this.posts.concat(res.posts);
+        this.posts = this.posts.concat(res.savedPosts);
         this.enough = res.posts.length < this.limit;
       } catch (err) {
         this.$toast.error(err.response.data.message);
@@ -57,13 +67,5 @@ export default {
       }
     },
   },
-  async fetch() {
-    const res = await this.$axios.$get(
-      `/post/feed?limit=${this.limit}&page=${this.page}`
-    );
-    this.posts = res.posts;
-    this.enough = res.posts.length < this.limit;
-  },
-  scrollToTop: false,
 };
 </script>

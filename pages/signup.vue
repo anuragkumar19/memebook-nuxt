@@ -101,7 +101,9 @@ export default {
       usernameRules: [
         (v) => !!v || "Username is required",
         (v) => v.length >= 3 || "Username must be at least 3 characters",
-        (v) => /^[a-zA-Z0-9]+$/.test(v) || "Username must be 0-9 and a-z",
+        (v) =>
+          /^[a-zA-Z0-9._]+$/.test(v) ||
+          "Username must contain only letters, numbers, periods(.) and underscores(_)",
       ],
       submitting: false,
     };

@@ -1,6 +1,7 @@
 export const state = () => ({
   signup_email: "",
   reset_email: "",
+  posts: [],
 });
 
 export const mutations = {
@@ -9,5 +10,8 @@ export const mutations = {
   },
   setResetEmail(state, email) {
     state.reset_email = email;
+  },
+  setPosts(state, posts) {
+    state.posts = posts;
   },
 };
