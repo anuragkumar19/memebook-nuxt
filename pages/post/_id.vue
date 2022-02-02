@@ -8,6 +8,7 @@
       :post="post"
       :emitComment="true"
       @comment="addComment"
+      @delete="handleDelete"
     />
     <NotFound v-else-if="!$fetchState.pending" />
     <Comments :comments="comments" v-if="post" @delete="deleteComment" />
@@ -43,6 +44,9 @@ export default {
     },
     deleteComment(comment) {
       this.comments = this.comments.filter((c) => c._id !== comment);
+    },
+    handleDelete(id) {
+      this.$router.back();
     },
     async getData() {
       if (this.loading) return;

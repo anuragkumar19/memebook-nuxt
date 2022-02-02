@@ -3,7 +3,7 @@
     <v-container class="d-flex justify-center">
       <v-card max-width="500px" width="100%" class="mt-5">
         <v-card-text class="px-4 py-5" v-if="step == 1">
-          <h2>Select Images</h2>
+          <h2>Select Image(s)</h2>
           <v-form v-model="valid" @submit.prevent="addImages">
             <v-file-input
               multiple
@@ -41,28 +41,31 @@
             </v-col>
           </v-row>
         </v-card-text>
-        <v-card-text v-if="step == 2">
-          <v-carousel hide-delimiters height="auto" v-if="images.length > 1">
-            <v-carousel-item v-for="(image, i) in images" :key="`ci-${i}`">
-              <cropper
-                class="cropper"
-                :src="createUrl(image)"
-                :stencil-props="{
-                  aspectRatio: 5 / 4,
-                }"
-                @change="(img) => change(img, i)"
-              />
-            </v-carousel-item>
-          </v-carousel>
-          <cropper
-            v-else
-            class="cropper"
-            :src="createUrl(images[0])"
-            :stencil-props="{
-              aspectRatio: 5 / 4,
-            }"
-            @change="(img) => change(img, 0)"
-          />
+        <v-card-text v-show="step == 2">
+          <template v-if="images.length > 0">
+            <cropper
+              v-for="(image, i) in images"
+              :class="`cropper ${i == cropStep ? '' : 'd-none'}`"
+              :src="createUrl(image)"
+              :key="`ci-${i}`"
+              :stencil-props="{
+                aspectRatio: 5 / 4,
+              }"
+              :debounce="false"
+              @change="(img) => change(img, i)"
+            />
+          </template>
+          {{ cropStep + 1 }} / {{ images.length }}
+          <v-row class="my-3">
+            <v-col cols="4" md="3" v-for="(image, i) in images" :key="i">
+              <v-card flat @click="cropStep = i">
+                <v-img
+                  :class="cropStep == i ? 'crop-active' : ''"
+                  :src="createUrl(image)"
+                />
+              </v-card>
+            </v-col>
+          </v-row>
         </v-card-text>
         <v-card-text v-if="step == 3">
           <v-textarea
@@ -80,14 +83,8 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn
-            color="secondary"
-            text
-            nuxt
-            :to="`/user/${$auth.user.username}`"
-            :loading="submitting"
-          >
-            Back to Profile
+          <v-btn color="secondary" text @click="back" :loading="submitting">
+            Back
           </v-btn>
           <v-btn
             color="primary"
@@ -124,12 +121,11 @@ export default {
     return {
       files: [],
       images: [],
-      croppedImage: {},
-      blobs: [],
+      blobs: {},
       caption: "",
       progress: 0,
       step: 1,
-      cropStep: 1,
+      cropStep: 0,
       fileRules: [
         (v) => {
           const arr = v.filter((file) => !file.type.startsWith("image/"));
@@ -154,24 +150,29 @@ export default {
     },
     removeImage(i) {
       this.images.splice(i, 1);
+      this.blobs = {};
     },
     back() {
       this.step = this.step - 1;
     },
     next() {
       if (this.step == 2) {
-        for (let key in this.croppedImage) {
-          this.croppedImage[key].canvas.toBlob((blob) => {
-            blob.lastModifiedDate = new Date();
-            blob.name = `post-${key}.png`;
-            this.blobs.push(blob);
-          });
+        if (this.cropStep < this.images.length - 1) {
+          this.cropStep = this.cropStep + 1;
+          return;
         }
       }
       this.step = this.step + 1;
     },
     change(img, i) {
-      this.croppedImage[i] = img;
+      img.canvas.toBlob((blob) => {
+        if (blob) {
+          blob.lastModifiedDate = new Date();
+          blob.name = `post-${i}.png`;
+          console.log(blob, this.blobs);
+          this.blobs[i] = blob;
+        }
+      });
     },
     async upload() {
       try {
@@ -180,9 +181,9 @@ export default {
 
         formData.append("caption", this.caption);
 
-        for (let i = 0; i < this.blobs.length; i++) {
-          formData.append("images", this.blobs[i]);
-        }
+        Object.values(this.blobs).map((blob) => {
+          formData.append("images", blob);
+        });
 
         const res = await this.$axios.$post("/post/image", formData, {
           onUploadProgress: (progressEvent) => {
@@ -190,11 +191,29 @@ export default {
           },
         });
 
+        this.files = [];
+        this.images = [];
+        this.blobs = {};
+        this.caption = "";
+        this.progress = 0;
+        this.step = 1;
+        this.cropStep = 0;
+
         this.$router.push(`/post/${res.post._id}`);
       } catch (err) {
         this.$toast.error(err.response.data.message);
       } finally {
         this.submitting = false;
+      }
+    },
+  },
+  watch: {
+    step(val) {
+      if (val == 2) {
+        this.images.map((image, i) => {
+          this.cropStep = i;
+        });
+        this.cropStep = 0;
       }
     },
   },
@@ -205,5 +224,9 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
+}
+.crop-active {
+  opacity: 0.7;
+  border: 5px solid cornflowerblue;
 }
 </style>

@@ -3,7 +3,7 @@
     <div class="text-center" v-if="$fetchState.pending">
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </div>
-    <Posts :posts="posts" />
+    <Posts :posts="posts" @delete="handleDelete" />
     <p v-if="!$fetchState.pending && posts.length == 0">
       Start following people to see posts
     </p>
@@ -55,6 +55,9 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    handleDelete(id) {
+      this.posts = this.posts.filter((post) => post._id !== id);
     },
   },
   async fetch() {

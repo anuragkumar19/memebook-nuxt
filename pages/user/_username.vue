@@ -90,7 +90,7 @@
               </v-list>
             </v-menu>
           </h1>
-          <h4 class="mb-3">
+          <h4 class="mb-3 d-none d-md-flex align-center">
             <span>{{ user.postsCount }} Posts</span>
             <v-btn nuxt :to="`/user/${user.username}/followers`" text
               >{{ user.followers }} Followers</v-btn
@@ -107,8 +107,22 @@
         </v-col>
       </v-row>
       <v-divider class="mt-4" />
+      <v-row class="mt-4 d-flex d-md-none text-center">
+        <v-col cols="4"> {{ user.postsCount }} Posts </v-col>
+        <v-col cols="4">
+          <nuxt-link :to="`/user/${user.username}/followers`"
+            >{{ user.followers }} Followers</nuxt-link
+          >
+        </v-col>
+        <v-col cols="4">
+          <nuxt-link :to="`/user/${user.username}/followings`"
+            >{{ user.followings }} Following</nuxt-link
+          >
+        </v-col>
+      </v-row>
+      <v-divider class="mt-4 d-flex d-md-none" />
       <h2 class="my-3">Posts</h2>
-      <Posts :posts="posts" />
+      <Posts :posts="posts" @delete="handleDelete" />
       <v-row justify="center">
         <v-dialog v-model="dialog" max-width="400">
           <v-card>
@@ -238,6 +252,9 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    handleDelete(id) {
+      this.posts = this.posts.filter((post) => post._id !== id);
     },
   },
   head() {

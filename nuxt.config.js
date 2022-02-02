@@ -8,7 +8,11 @@ export default {
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { hid: "description", name: "description", content: "" },
+      {
+        hid: "description",
+        name: "description",
+        content: "A social media platform for memelovers",
+      },
       { name: "format-detection", content: "telephone=no" },
     ],
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
@@ -92,7 +96,14 @@ export default {
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
-      lang: "en",
+      theme_color: "#a435f0",
+      background_color: "#fff",
+      display: "fullscreen",
+      scope: "/",
+      start_url: "/",
+      description: "A social media platform for memelovers",
+      short_name: "Memebook",
+      name: "Memebook",
     },
   },
 

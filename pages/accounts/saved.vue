@@ -4,7 +4,7 @@
     <div class="text-center" v-if="$fetchState.pending">
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </div>
-    <Posts :posts="posts" />
+    <Posts :posts="posts" @delete="handleDelete" />
     <div class="text-center">
       <v-btn
         text
@@ -65,6 +65,9 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    handleDelete(id) {
+      this.posts = this.posts.filter((post) => post._id !== id);
     },
   },
 };

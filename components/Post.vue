@@ -9,9 +9,29 @@
           <v-list-item-title>{{ post.user.username }}</v-list-item-title>
         </v-list-item-content>
         <v-spacer></v-spacer>
-        <v-btn icon @click.prevent="">
-          <v-icon>mdi-dots-horizontal</v-icon>
-        </v-btn>
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn @click.prevent icon v-bind="attrs" v-on="on" Dropdown>
+              <v-icon>mdi-dots-horizontal</v-icon>
+            </v-btn>
+          </template>
+          <v-list>
+            <v-list-item nuxt :to="`/post/${post._id}`">
+              <v-list-item-title>Go to post</v-list-item-title>
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-title>Copy Link</v-list-item-title>
+            </v-list-item>
+            <template v-if="post.user.username == $auth.user.username">
+              <v-list-item @click="deletePost">
+                <v-list-item-title style="color: red">Delete</v-list-item-title>
+              </v-list-item>
+              <v-list-item @click="modal = true">
+                <v-list-item-title>Edit Caption</v-list-item-title>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-menu>
       </v-list-item>
       <div @dblclick="like">
         <v-img
@@ -44,7 +64,7 @@
         />
       </div>
 
-      <v-card-text v-if="post.caption" @dblclick="like">
+      <v-card-text v-if="post.caption" @dblclick="like" style="color: #000">
         {{ post.caption }}
       </v-card-text>
       <v-card-actions>
@@ -78,6 +98,41 @@
         <Comments :comments="comments" @delete="deleteComment" />
         <CommentForm :post="post" @comment="addComment" />
       </v-card-text>
+      <v-row justify="center" v-if="post.user.username == $auth.user.username">
+        <v-dialog v-model="modal" persistent max-width="500">
+          <v-card>
+            <v-card-title class="text-h5"> Edit Caption </v-card-title>
+            <v-card-text>
+              <v-textarea
+                label="Caption"
+                auto-grow
+                v-model="caption"
+                :disabled="submitting3"
+              ></v-textarea>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                color="primary"
+                text
+                @click="modal = false"
+                :loading="submitting3"
+              >
+                Close
+              </v-btn>
+              <v-btn
+                color="secondary"
+                text
+                @click="updatePost"
+                :disabled="post.caption == caption"
+                :loading="submitting3"
+              >
+                Update
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
     </v-card>
   </v-col>
 </template>
@@ -89,8 +144,11 @@ export default {
   data() {
     return {
       model: 0,
+      modal: false,
+      caption: this.post.caption,
       submitting: false,
       submitting2: false,
+      submitting3: false,
       comments: [],
     };
   },
@@ -161,6 +219,34 @@ export default {
     },
     deleteComment(comment) {
       this.comments = this.comments.filter((c) => c._id !== comment);
+    },
+    async deletePost() {
+      if (!confirm("Are you sure you want to delete this post?")) return;
+
+      try {
+        this.$toast.show("Deleting post...");
+        const res = await this.$axios.$delete(`/post/${this.post._id}`);
+        this.$toast.success(res.message);
+        this.$emit("delete", this.post._id);
+      } catch (err) {
+        this.$toast.error(err.response.data.message);
+      }
+    },
+    async updatePost() {
+      try {
+        this.submitting3 = true;
+        this.$toast.show("Updating post...");
+        const res = await this.$axios.$put(`/post/${this.post._id}`, {
+          caption: this.caption,
+        });
+        this.$toast.success(res.message);
+        this.post.caption = this.caption;
+        this.modal = false;
+      } catch (err) {
+        this.$toast.error(err.response.data.message);
+      } finally {
+        this.submitting3 = false;
+      }
     },
   },
 };
