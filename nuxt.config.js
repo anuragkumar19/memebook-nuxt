@@ -106,7 +106,7 @@ export default {
       name: "Memebook",
     },
     workbox: {
-      offline: false,
+      enabled: false,
     },
   },
 
