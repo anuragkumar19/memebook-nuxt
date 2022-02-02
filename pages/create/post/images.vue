@@ -83,7 +83,13 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="secondary" text @click="back" :loading="submitting">
+          <v-btn
+            v-if="step != 1"
+            color="secondary"
+            text
+            @click="back"
+            :loading="submitting"
+          >
             Back
           </v-btn>
           <v-btn
