@@ -28,27 +28,50 @@
               v-if="$auth.user.username == user.username"
               >Edit Profile</v-btn
             >
-            <v-btn
-              class="ml-3"
-              small
-              icon
-              v-if="$auth.user.username == user.username"
-            >
-              <v-icon>mdi-cog</v-icon>
-            </v-btn>
+            <v-menu offset-y>
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  class="ml-3"
+                  small
+                  icon
+                  v-if="$auth.user.username == user.username"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  <v-icon>mdi-cog</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item nuxt to="/accounts/changePassword">
+                  <v-list-item-title>Change Password</v-list-item-title>
+                </v-list-item>
+                <v-list-item
+                  href="https://github.com/anuragkumar19/memebook-nuxt/issues"
+                  target="_blank"
+                >
+                  <v-list-item-title>Report a problem</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="$auth.logout()">
+                  <v-list-item-title>Logout</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
             <!-- isFollowing: true // means $auth.user.following includes user,
             isFollower: true // means req.user.followers includes user -->
             <v-btn
               small
               color="primary"
               outlined
-              v-else-if="!user.isFollowing"
+              v-if="$auth.user.username != user.username && !user.isFollowing"
               @click="follow"
               :loading="submitting"
             >
               {{ user.isFollower ? "Follow Back" : "Follow" }}
             </v-btn>
-            <v-menu offset-y v-else>
+            <v-menu
+              offset-y
+              v-if="$auth.user.username != user.username && user.isFollowing"
+            >
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
                   small
