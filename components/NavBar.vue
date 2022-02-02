@@ -24,6 +24,7 @@
                       nuxt
                       :to="`/user/${user.username}`"
                       :key="index"
+                      @click="dialog = false"
                     >
                       <v-list-item-avatar>
                         <v-img :src="user.avatar"></v-img>

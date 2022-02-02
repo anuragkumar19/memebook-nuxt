@@ -116,7 +116,7 @@
         </v-col>
         <v-col cols="4">
           <nuxt-link :to="`/user/${user.username}/followings`"
-            >{{ user.followings }} Following</nuxt-link
+            >{{ user.following }} Following</nuxt-link
           >
         </v-col>
       </v-row>
