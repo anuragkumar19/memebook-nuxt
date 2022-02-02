@@ -105,6 +105,9 @@ export default {
       short_name: "Memebook",
       name: "Memebook",
     },
+    workbox: {
+      offline: false,
+    },
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
