@@ -84,8 +84,10 @@
       <v-btn icon nuxt to="/create/post">
         <v-icon>mdi-plus-box</v-icon>
       </v-btn>
-      <v-btn icon nuxt to="">
-        <v-icon>mdi-chat</v-icon>
+      <v-btn icon nuxt to="/notifications">
+        <v-badge :content="count" :value="count" color="pink" overlap>
+          <v-icon> mdi-heart </v-icon>
+        </v-badge>
       </v-btn>
       <v-btn icon @click="dialog = true">
         <v-icon>mdi-magnify</v-icon>
@@ -130,7 +132,11 @@ export default {
       limit: 10,
       page: 1,
       enough: true,
+      count: 0,
     };
+  },
+  async fetch() {
+    this.count = (await this.$axios.$get(`/notification/unseen`)).count;
   },
   methods: {
     async search() {
