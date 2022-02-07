@@ -115,8 +115,6 @@ export default {
         this.name !== this.$auth.user.name ||
         this.bio !== this.$auth.user.bio ||
         this.website !== this.$auth.user.website;
-
-      console.log(this.bio, this.$auth.user.bio);
     },
     async updateProfile() {
       this.submitting = true;

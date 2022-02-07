@@ -30,7 +30,9 @@
               </v-btn>
             </v-list-item-action>
           </v-list-item>
-          <h3 v-if="subscriptions.length == 0">No Subscriptions Yet</h3>
+          <h3 v-if="$fetchState.pending && subscriptions.length == 0">
+            No Subscriptions Yet
+          </h3>
         </v-list>
       </v-card-text>
     </v-card>
@@ -100,7 +102,6 @@ export default {
           applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
         });
 
-        console.log(subscription);
         this.loading = true;
         await this.$axios.$post("/push/subscribe", {
           subscription,

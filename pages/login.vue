@@ -94,8 +94,6 @@ export default {
             password: this.password,
           },
         });
-
-        console.log(res);
       } catch (err) {
         this.$toast.error(err.response.data.message);
       } finally {

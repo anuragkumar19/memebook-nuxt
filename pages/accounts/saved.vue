@@ -43,7 +43,6 @@ export default {
       ).savedPosts;
       this.enough = this.posts.length < this.limit;
     } catch (err) {
-      console.log(err);
       this.$toast.error(err.response.data.message);
     }
   },

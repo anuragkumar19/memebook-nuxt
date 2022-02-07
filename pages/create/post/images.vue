@@ -175,7 +175,6 @@ export default {
         if (blob) {
           blob.lastModifiedDate = new Date();
           blob.name = `post-${i}.png`;
-          console.log(blob, this.blobs);
           this.blobs[i] = blob;
         }
       });
