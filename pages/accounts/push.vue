@@ -30,7 +30,7 @@
               </v-btn>
             </v-list-item-action>
           </v-list-item>
-          <h3 v-if="$fetchState.pending && subscriptions.length == 0">
+          <h3 v-if="!$fetchState.pending && subscriptions.length == 0">
             No Subscriptions Yet
           </h3>
         </v-list>
