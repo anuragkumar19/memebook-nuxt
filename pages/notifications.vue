@@ -8,6 +8,10 @@
         <h2>No Notifications</h2>
       </div>
       <h1>Notifications</h1>
+      <v-btn nuxt to="/accounts/push" color="primary" small class="my-3">
+        <v-icon left>mdi-bell</v-icon>
+        Subscriptions
+      </v-btn>
       <v-list>
         <Notification
           v-for="notification in notifications"

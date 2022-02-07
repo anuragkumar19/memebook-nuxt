@@ -45,6 +45,9 @@
                 <v-list-item nuxt to="/accounts/changePassword">
                   <v-list-item-title>Change Password</v-list-item-title>
                 </v-list-item>
+                <v-list-item nuxt to="/accounts/push">
+                  <v-list-item-title>Push Subscriptions</v-list-item-title>
+                </v-list-item>
                 <v-list-item
                   href="https://github.com/anuragkumar19/memebook-nuxt/issues"
                   target="_blank"
