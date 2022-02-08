@@ -71,6 +71,16 @@
             >
               {{ user.isFollower ? "Follow Back" : "Follow" }}
             </v-btn>
+            <v-btn
+              small
+              text
+              outlined
+              v-if="$auth.user.username != user.username"
+              nuxt
+              :to="`/direct/${user.username}`"
+            >
+              Message
+            </v-btn>
             <v-menu
               offset-y
               v-if="$auth.user.username != user.username && user.isFollowing"
