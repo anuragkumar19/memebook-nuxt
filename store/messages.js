@@ -4,8 +4,13 @@ export const state = () => ({
 
 export const mutations = {
   handle(state, data) {
+    console.log(data);
     if (state.users[data.from._id]) {
       state.users[data.from._id].messages.push(data);
+    }
+
+    if (state.users[data.to._id]) {
+      state.users[data.to._id].messages.push(data);
     }
   },
   setMessages(state, data) {

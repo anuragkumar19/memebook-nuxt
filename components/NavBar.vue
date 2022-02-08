@@ -89,6 +89,11 @@
           <v-icon> mdi-heart </v-icon>
         </v-badge>
       </v-btn>
+      <v-btn icon nuxt to="/direct">
+        <v-badge :content="msgCount" :value="msgCount" color="pink" overlap>
+          <v-icon> mdi-forum </v-icon>
+        </v-badge>
+      </v-btn>
       <v-btn icon @click="dialog = true">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
@@ -133,10 +138,12 @@ export default {
       page: 1,
       enough: true,
       count: 0,
+      msgCount: 0,
     };
   },
   async fetch() {
     this.count = (await this.$axios.$get(`/notification/unseen`)).count;
+    this.msgCount = (await this.$axios.$get(`/direct/count`)).count;
   },
   methods: {
     async search() {

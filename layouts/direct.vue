@@ -1,14 +1,12 @@
 <template>
   <v-app>
-    <NavBar v-if="$auth.loggedIn" />
     <Nuxt />
-    <Footer />
   </v-app>
 </template>
 
 <script>
 export default {
-  name: "DefaultLayout",
+  name: "DirectLayout",
 };
 </script>
 
