@@ -14,11 +14,11 @@
               <v-form v-model="valid" @submit.prevent="login">
                 <v-container>
                   <v-text-field
-                    v-model="email"
-                    :rules="emailRules"
-                    label="Email"
+                    v-model="emailOrUsername"
+                    :rules="emailOrUsernameRules"
+                    label="Email or Username"
                     required
-                    type="email"
+                    type="text"
                   ></v-text-field>
                   <v-text-field
                     v-model="password"
@@ -69,14 +69,11 @@ export default {
   auth: "guest",
   data() {
     return {
-      email: "",
+      emailOrUsername: "",
       password: "",
       valid: false,
       submitting: false,
-      emailRules: [
-        (v) => !!v || "Email is required",
-        (v) => /.+@.+\..+/.test(v) || "Email must be valid",
-      ],
+      emailOrUsernameRules: [(v) => !!v || "Email or Username is required"],
       passwordRules: [
         (v) => !!v || "Password is required",
         (v) => v.length >= 6 || "Password must be at least 6 characters",
@@ -90,7 +87,7 @@ export default {
 
         const res = await this.$auth.loginWith("local", {
           data: {
-            email: this.email,
+            emailOrUsername: this.emailOrUsername,
             password: this.password,
           },
         });
